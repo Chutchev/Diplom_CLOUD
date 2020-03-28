@@ -3,15 +3,26 @@ import Router from 'vue-router'
 
 Vue.use(Router);
 
+const ifAuthenticated = (to, from, next) => {
+    let is_autorised = localStorage.getItem('TOKEN');
+    if (is_autorised) {
+        next();
+        return
+    }
+    next('/login')
+};
+
 export default new Router({
     mode: 'history',
     routes: [
         {
             path: '/main',
+            beforeEnter: ifAuthenticated,
             component: () => import("@/components/MainPage")
         },
         {
             path: '/home',
+            beforeEnter: ifAuthenticated,
             component: () => import("@/components/Home")
         },
         {

@@ -39,7 +39,8 @@
                 };
                 await axios.post(url, credentials)
                     .then((response) => {
-                        this.isAutorised = response.data['is_autorised'];
+                        localStorage.setItem('TOKEN', response.data['token']);
+                        document.location.href = 'http://localhost:8080/home'
                     })
                     .catch(error => console.log('ОШИБКА!!!!: ' + error));
             },
@@ -48,7 +49,6 @@
                 let login = this.loginForm.email;
                 let pwd = this.loginForm.pwd;
                 await this.loginToCloud(login, pwd);
-                this.initForm()
             }
         }
     }
