@@ -6,6 +6,7 @@
             <p><input v-model="loginForm.email" type="email" placeholder="Email"></p>
             <p><input v-model="loginForm.pwd" type="password" placeholder="Password"></p>
             <input type="submit" value="Log in" >
+            <div>{{this.isAutorised}}</div>
         </form>
     </div>
 </template>
@@ -18,9 +19,11 @@
         data() {
             return {
                 loginForm: {
+
                     email: '',
-                    pwd: ''
+                    pwd: '',
                 },
+                isAutorised: null
             }
         },
         methods: {
@@ -28,25 +31,24 @@
                 this.loginForm.email = '';
                 this.loginForm.pwd = '';
             },
-            loginToCloud(login, password){
+            async loginToCloud(login, password){
                 const url = 'http://127.0.0.1:5000/login';
-                console.log('login_to_cloud');
                 let credentials = {
                     login,
                     password
                 };
-                axios.post(url, credentials);
-                alert('Отправлено!')
+                await axios.post(url, credentials)
+                    .then((response) => {
+                        this.isAutorised = response.data['is_autorised'];
+                    })
+                    .catch(error => console.log('ОШИБКА!!!!: ' + error));
             },
-            onSubmit(evt){
+            async onSubmit(evt) {
                 evt.preventDefault();
-                console.log('onSubmit()');
                 let login = this.loginForm.email;
                 let pwd = this.loginForm.pwd;
-                console.log(login);
-                console.log(pwd);
-                this.loginToCloud(login, pwd);
-                this.initForm();
+                await this.loginToCloud(login, pwd);
+                this.initForm()
             }
         }
     }
