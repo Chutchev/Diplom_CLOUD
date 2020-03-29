@@ -1,8 +1,6 @@
 <template>
     <div class="fileInfo">
-        <h1>ВСЕПАПАПАПАПАПЫАПВАПЫВАЫВА</h1>
-        <p>{{file.title}}</p>
-        <p>{{file.size}}</p>
+        <h1>{{file.title}}</h1>
     </div>
 </template>
 

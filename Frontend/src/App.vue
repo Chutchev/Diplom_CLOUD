@@ -10,11 +10,7 @@ export default {
   name: 'App',
   data() {
     return{
-      files: [
-        {id: 1, title: 'Фото 1', size: 7},
-        {id: 2, title: 'Фото 2', size: 3},
-        {id: 3, title: 'Документ', size: 5},
-      ]
+
     }
   },
   components: {
