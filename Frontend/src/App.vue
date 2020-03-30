@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-    <h1>Облако</h1>
+    <MainInfoBar v-if="getUrl() != '/login'"/>
     <router-view />
   </div>
 </template>
 
 <script>
+  import MainInfoBar from "@/components/MainInfoBar";
 export default {
   name: 'App',
   data() {
@@ -14,6 +15,12 @@ export default {
     }
   },
   components: {
+    MainInfoBar
+  },
+  methods: {
+    getUrl() {
+      return this.$route.path
+    }
   }
 }
 </script>

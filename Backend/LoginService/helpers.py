@@ -18,5 +18,7 @@ def decode_token(token):
     :param token: user token
     :return: info - user info
     """
-    info = jwt.decode(bytes(token, encoding='utf-8'), 'secret', algorithms=['HS256'])
+    print(token)
+    info = jwt.decode(token, 'secret', algorithms=['HS256'])
+    print(info)
     return info

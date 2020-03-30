@@ -23,3 +23,9 @@ def get_file(username):
         cur = conn.cursor()
         data = cur.execute(f"SELECT * FROM FILES WHERE username='{username}'")
         return data.fetchall()
+
+def get_filepath(filename):
+    with sqlite3.connect("files.db") as conn:
+        cur = conn.cursor()
+        data = cur.execute(f"SELECT path FROM FILES WHERE filename='{filename}'")
+        return data.fetchone()

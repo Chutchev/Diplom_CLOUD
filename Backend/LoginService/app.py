@@ -28,6 +28,13 @@ def login():
             result['token'] = token
     return jsonify(result)
 
+@app.route('/auth', methods=['post'])
+def get_author():
+    if request.method == 'POST':
+        token = request.data
+        info = helpers.decode_token(token)
+        return jsonify(info)
+
 
 if __name__ == '__main__':
     app.run()
