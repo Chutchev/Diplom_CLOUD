@@ -16,7 +16,7 @@ export default new Router({
     mode: 'history',
     routes: [
         {
-            path: '/main',
+            path: '/files',
             beforeEnter: ifAuthenticated,
             component: () => import("@/components/MainPage")
         },

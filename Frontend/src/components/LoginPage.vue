@@ -40,7 +40,7 @@
                 await axios.post(url, credentials)
                     .then((response) => {
                         localStorage.setItem('TOKEN', response.data['token']);
-                        document.location.href = 'http://localhost:8080/home'
+                        document.location.href = 'http://localhost:8080/main'
                     })
                     .catch(error => console.log('ОШИБКА!!!!: ' + error));
             },
