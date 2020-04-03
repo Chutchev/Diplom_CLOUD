@@ -11,15 +11,24 @@ CORS(app)
 app.debug = True
 
 
-@app.route('/files', methods=['post', 'get'])
+@app.route('/files', methods=['post', 'get', 'delete'])
 def get_files():
     if request.method == 'POST':
-        token = json.loads(request.data)['token']
+        response_from_ui = json.loads(request.data)
+        token = response_from_ui['token']
         response = requests.post('http://127.0.0.1:5000/auth', data=token)
         info = response.json()['data']
-        print(info)
-        files_in_dir = get_file('IVANCHUTCHEV')
-        return jsonify(list(files_in_dir))
+        if response_from_ui.get('DELETE'):
+            filename = response_from_ui.get('filename')
+            filepath = get_filepath(filename)[0]
+            data = delete_file(filename)
+            answer = {'DELETED': True,
+                      'filename': filename}
+            os.remove(filepath)
+            return jsonify(answer)
+        else:
+            files_in_dir = get_file('IVANCHUTCHEV')
+            return jsonify(list(files_in_dir))
 
 @app.route('/files/<filename>', methods=['get'])
 def download(filename):

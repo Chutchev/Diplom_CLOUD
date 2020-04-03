@@ -29,3 +29,10 @@ def get_filepath(filename):
         cur = conn.cursor()
         data = cur.execute(f"SELECT path FROM FILES WHERE filename='{filename}'")
         return data.fetchone()
+
+
+def delete_file(filename):
+    with sqlite3.connect("files.db") as conn:
+        cur = conn.cursor()
+        data = cur.execute(f"DELETE FROM FILES WHERE filename='{filename}'")
+        return data
