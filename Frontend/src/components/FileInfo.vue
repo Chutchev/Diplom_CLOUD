@@ -9,7 +9,7 @@
         </div>
     </a> -->
         <li class="cards__item">
-            <div class="card" @contextmenu="this.showContextMenu">
+            <div class="card" @contextmenu="this.showContextMenu" :data-url="`http://127.0.0.1:6556/files/${file.title}`">
                 <div class="card__image card__image--fence"></div>
                 <div class="card__content">
                     <div class="card__title">{{file.title}}</div>

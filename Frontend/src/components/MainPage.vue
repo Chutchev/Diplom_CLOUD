@@ -3,26 +3,27 @@
         <ul class="cards">
         <FileInfo v-for="file in files" :key="file.title" v-bind:file="file"/>
         </ul>
-        <div class="menu">
-            <ul class='custom-menu'>
-                <li>Customize</li><hr>
-                <li data-action="Delete">Удалить файл</li>
-                <li data-action="CopyUrl">Копировать ссылку на файл</li>
-            </ul>
-        </div>
+        <ContextMenuPage v-bind:title="this.title" v-bind:url="this.url"/>
+        <CopyUrlHTML v-bind:url="this.url"/>
     </div>
 </template>
 
 <script>
     import FileInfo from "@/components/FileInfo";
+    import ContextMenuPage from "@/components/ContextMenuPage";
+    import CopyUrlHTML from "@/components/CopyUrlHTML";
     import axios from 'axios'
     export default {
         data(){
             return {
-                files: this.files
+                files: this.files,
+                title: null,
+                url: null
             }
         },
         components: {
+            CopyUrlHTML,
+            ContextMenuPage,
             FileInfo
         },
         methods: {
@@ -49,45 +50,25 @@
                     })
                 });
                 this.files = files;
-            }
+            },
         },
         mounted() {
             this.getFiles();
-        }
+            document.addEventListener('contextmenu',e => {
+                let activeElement = e.target;
+                this.title = activeElement.parentNode.children[0].innerHTML;
+                let parent = activeElement.parentNode;
+                while (parent.getAttribute('class') !== 'card'){
+                    parent = parent.parentNode;
+                }
+                this.url = parent.getAttribute('data-url');
+                console.log(this.url);
+            });
+        },
     }
 
 </script>
 
 <style scoped>
-    .custom-menu {
-        display: none;
-        z-index: 1000;
-        position: absolute;
-        overflow: hidden;
-        border: 1px solid #bdc3c7;
-        white-space: nowrap;
-        background: #303030;
-        color: #fff;
-    }
-    .custom-menu li {
-        padding: 9px 15px;
-        cursor: pointer;
-        list-style-type: none;
-        transition: all .3s ease;
-        user-select: none;
-        font-weight:200;
-    }
-    .custom-menu li:nth-child(1){
-        pointer-events:none;
-        color:#b2b2b2;
-    }
-    .custom-menu hr{
-        margin:0 12px;
-        border:none;
-        background-color:#545454;
-        height:1px;
-    }
-    .custom-menu li:hover {
-        background-color: #545454;
-    }
+
 </style>
