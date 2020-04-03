@@ -9,9 +9,9 @@
 </template>
 
 <script>
-    import FileInfo from "@/components/FileInfo";
-    import ContextMenuPage from "@/components/ContextMenuPage";
-    import CopyUrlHTML from "@/components/CopyUrlHTML";
+    import FileInfo from "@/components/FilesMenu/FileInfo";
+    import ContextMenuPage from "@/components/FilesMenu/ContextMenuPage";
+    import CopyUrlHTML from "@/components/FilesMenu/CopyUrlHTML";
     import axios from 'axios'
     export default {
         data(){

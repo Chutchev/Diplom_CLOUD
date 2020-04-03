@@ -18,7 +18,7 @@ export default new Router({
         {
             path: '/files',
             beforeEnter: ifAuthenticated,
-            component: () => import("@/components/MainPage")
+            component: () => import("@/components/FilesMenu/MainPage")
         },
         {
             path: '/home',
