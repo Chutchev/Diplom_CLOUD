@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import MainPage from "@/components/FilesMenu/MainPage";
 
 Vue.use(Router);
 
@@ -18,7 +19,7 @@ export default new Router({
         {
             path: '/files',
             beforeEnter: ifAuthenticated,
-            component: () => import("@/components/FilesMenu/MainPage")
+            component: MainPage
         },
         {
             path: '/home',
@@ -29,5 +30,9 @@ export default new Router({
             path: '/login',
             component: () => import("@/components/LoginPage")
         },
+        {
+            path: '/me',
+            component: () => import("@/components/AccountPage/MePage")
+        }
     ]
 })

@@ -19,7 +19,9 @@
           },
             url: {
               type: String
-            }
+            },
+            element: null,
+            file: null
         },
         data(){
             return {
@@ -37,8 +39,11 @@
                 };
                 axios.post(url, params).then(response => {
                     console.log('FILE DELETED', response.data);
-                    location.reload()
+                });
+                this.$emit('eventFromContextMenu', {
+                    element: this.element,
                 })
+                // this.element.remove();
             },
             copyFileUrl(eventObject) {
                 let copyForm = document.getElementsByClassName('row_pop-up')[0];
@@ -55,9 +60,6 @@
                 link.remove();
             }
         },
-        mounted(){
-
-        }
     }
 </script>
 
@@ -93,4 +95,6 @@
     .custom-menu li:hover {
         background-color: #545454;
     }
+
+
 </style>

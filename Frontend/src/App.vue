@@ -1,7 +1,7 @@
 <template>
   <div id="app" @click="this.offContextMenu">
     <MainInfoBar v-if="getUrl() != '/login'"/>
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   name: 'App',
   data() {
     return{
-        activeElement: null
+        activeElement: null,
     }
   },
   components: {
@@ -30,6 +30,7 @@ export default {
   },
   mounted() {
     this.offStandartContextMenu();
+
   }
 }
 </script>

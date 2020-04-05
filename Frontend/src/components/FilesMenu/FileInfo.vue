@@ -1,20 +1,11 @@
-<template  >
-    <!--<a :href="`http://127.0.0.1:6556/files/${file.title}`">
-        <div class="fileInfo">
-
-            <a :href="`http://127.0.0.1:6556/files/${file.title}`">{{file.title}}</a>
-            <p>{{file.title}}</p>
-            <small>{{file.filetype}}</small>
-
-        </div>
-    </a> -->
-        <li class="cards__item">
-            <div class="card" @contextmenu="this.showContextMenu" :data-url="`http://127.0.0.1:6556/files/${file.title}`">
+<template>
+        <li class="cards__item" :data-url="`http://127.0.0.1:6556/files/${file.title}`" :id="file.id">
+            <div class="card" @contextmenu="this.showContextMenu">
                 <div class="card__image card__image--fence"></div>
                 <div class="card__content">
                     <div class="card__title">{{file.title}}</div>
-                    <p class="card__text">This is the shorthand for flex-grow, flex-shrink and flex-basis combined. The second and third parameters (flex-shrink and flex-basis) are optional. Default is 0 1 auto. </p>
-                    <button class="btn btn--block card__btn">Button</button>
+                    <p class="card__text">This is the shorthand for flex-grow, flex-shrink and flex-basis combined. The
+                        second and third parameters (flex-shrink and flex-basis) are optional. Default is 0 1 auto. </p>
                 </div>
             </div>
         </li>
@@ -24,34 +15,40 @@
     export default {
         props: {
             file: {
-                    type: Object,
-                    required: true
-            }
+                type: Object,
+                required: true
+            },
+            deleteFile: null
         },
         methods: {
-            showContextMenu(eventObject){
+            showContextMenu(eventObject) {
                 document.querySelector('div.menu').setAttribute('style', 'display: block');
-                 let styleForMenu = `top: ${eventObject.pageY}px;
+                let styleForMenu = `top: ${eventObject.pageY}px;
                                      left: ${eventObject.pageX}px;
                                      position: absolute;
                                      display: inline-block;
                                      padding-left: 0`;
-                 let menuElement = document.querySelector('div.menu > ul');
-                 menuElement.setAttribute('style', styleForMenu);
+                let menuElement = document.querySelector('div.menu > ul');
+                menuElement.setAttribute('style', styleForMenu);
+                this.$emit('activeFile', {
+                    file: this.file
+                });
                 return false;
             },
-
+        },
+        mounted(){
+            console.log(this.show)
         }
     }
 </script>
 
 <style scoped>
-    @gray-darker:               #444444;
-    @gray-dark:                 #696969;
-    @gray:                      #999999;
-    @gray-light:                #cccccc;
-    @gray-lighter:              #ececec;
-    @gray-lightest:             lighten(@gray-lighter,4%);
+    @gray-darker :               #444444;
+    @gray-dark :                 #696969;
+    @gray :                      #999999;
+    @gray-light :                #cccccc;
+    @gray-lighter :              #ececec;
+    @gray-lightest :             lighten(@gray-lighter ,4%);
 
     *,
     *::before,
@@ -65,7 +62,7 @@
 
     body {
         color: @gray;
-        font-family: 'Roboto','Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-style: normal;
         font-weight: 400;
         letter-spacing: 0;
@@ -85,10 +82,7 @@
     .btn {
         background-color: white;
         border: 1px solid @gray-light;
-    //border-radius: 1rem;
-        color: @gray-dark;
-        padding: 0.5rem;
-        text-transform: lowercase;
+    //border-radius: 1rem; color: @gray-dark; padding: 0.5rem; text-transform: lowercase;
     }
 
     .btn--block {
@@ -113,10 +107,11 @@
     .card {
         background-color: white;
         border-radius: 0.25rem;
-        box-shadow: 0 20px 40px -14px rgba(0,0,0,0.25);
+        box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
         display: flex;
         flex-direction: column;
         overflow: hidden;
+
         &:hover {
             .card__image {
                 filter: contrast(100%);
@@ -138,36 +133,19 @@
         border-top-left-radius: 0.25rem;
         border-top-right-radius: 0.25rem;
         filter: contrast(70%);
-    //filter: saturate(180%);
-        overflow: hidden;
-        position: relative;
-        transition: filter 0.5s cubic-bezier(.43,.41,.22,.91);;
+    //filter: saturate(180%); overflow: hidden; position: relative; transition: filter 0.5s cubic-bezier(.43, .41, .22, .91);;
+
         &::before {
             content: "";
             display: block;
             padding-top: 56.25%;
         }
-        @media(min-width: 40rem) {
+
+        @media (min-width: 40rem) {
             &::before {
                 padding-top: 66.6%;
             }
         }
-    }
-
-    .card__image--flowers {
-        background-image: url(https://unsplash.it/800/600?image=82);
-    }
-
-    .card__image--river {
-        background-image: url(https://unsplash.it/800/600?image=11);
-    }
-
-    .card__image--record {
-        background-image: url(https://unsplash.it/800/600?image=39);
-    }
-
-    .card__image--fence {
-        background-image: url(https://unsplash.it/800/600?image=59);
     }
 
     .card__title {
@@ -186,6 +164,7 @@
         line-height: 1.5;
         margin-bottom: 1.25rem;
     }
+
     a, a:link {
         text-decoration: none;
         color: #2c3e50;
