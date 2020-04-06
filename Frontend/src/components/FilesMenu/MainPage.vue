@@ -1,8 +1,8 @@
 <template>
-    <div id="loader" v-if="this.loading"><p>LOADING</p></div>
+    <div id="loader" v-if="this.loading"><img src="../../assets/images/loader.gif"/></div>
     <div class="files" v-else>
             <transition-group name="fade" tag="ul" class="cards">
-                <FileInfo v-for="file in files" :key="file.id" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
+                <FileInfo v-for="(file, index) in files" :key="index" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
             </transition-group>
         <ContextMenuPage @eventFromContextMenu="this.deleteFileFromUI" v-bind:title="this.title" v-bind:url="this.url"
                          v-bind:element="this.element" v-bind:file="this.file"/>
@@ -40,9 +40,7 @@
                 this.activeFile = data.file;
                 console.log('CHOOOSE FILE ', this.activeFile)
             },
-            async deleteFileFromUI(data) {
-                console.log(data.element);
-                console.log(this.files, this.activeFile);
+            async deleteFileFromUI() {
                 delete this.files[this.activeFile];
                 await this.getFiles();
                 // location.reload();
@@ -76,11 +74,10 @@
         },
         mounted() {
             let self = this;
+            this.getFiles();
             setTimeout(function () {
                 self.loading = false;
-            }, 400);
-            console.log('Должно исчезнуть');
-            this.getFiles();
+            }, 1000);
             document.addEventListener('contextmenu', e => {
                 let activeElement = e.target;
                 this.title = activeElement.parentNode.children[0].innerHTML;

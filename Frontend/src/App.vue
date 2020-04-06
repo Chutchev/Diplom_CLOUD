@@ -25,7 +25,12 @@ export default {
       document.oncontextmenu = function (){return false};
     },
     offContextMenu(){
-      document.querySelector('div.menu').setAttribute('style', 'display: none');
+      try {
+        document.querySelector('div.menu').setAttribute('style', 'display: none');
+      }catch (e) {
+        console.log(e)
+      }
+
     }
   },
   mounted() {

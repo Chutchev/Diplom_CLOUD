@@ -47,7 +47,6 @@
             },
             copyFileUrl(eventObject) {
                 let copyForm = document.getElementsByClassName('row_pop-up')[0];
-                console.log(copyForm);
                 copyForm.setAttribute('style', `top: ${eventObject.y}px;
                                                                     display: inline-block;
                                                                     left: ${eventObject.x}px`);
