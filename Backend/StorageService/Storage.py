@@ -6,9 +6,25 @@ from DBExecutor import *
 import requests
 from helpers import *
 import os
+
 app = Flask(__name__)
 CORS(app)
 app.debug = True
+PATH = os.path.abspath('../FILES')
+
+
+@app.route('/upload', methods=['post'])
+def upload_file():
+    response = {'SUCCESS': False}
+    if request.method == 'POST':
+        files = dict(request.files)
+        for f in files.values():
+            fullpath = os.path.join(PATH, f.filename)
+            f.save(dst=fullpath)
+            md5_sum = read_hash(fullpath)
+            add_file(f.filename, fullpath, 'IVANCHUTCHEV', f.filename.split('.')[-1], md5_sum)
+        response = {'SUCCESS': True}
+    return jsonify(response)
 
 
 @app.route('/files', methods=['post', 'get', 'delete'])
@@ -37,10 +53,5 @@ def download(filename):
     return send_file(filepath, as_attachment=True)
     # return send_from_directory(filepath, filename=filename)
 
-
-# @app.route('/upload', methods=['post', 'get'])
-# def upload():
-#     media = UploadSet('media', default_dest=lambda app: app.instance_root)
-#
 if __name__ == '__main__':
     app.run(port=6556)
