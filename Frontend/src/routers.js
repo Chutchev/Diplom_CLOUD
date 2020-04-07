@@ -5,8 +5,9 @@ import MainPage from "@/components/FilesMenu/MainPage";
 Vue.use(Router);
 
 const ifAuthenticated = (to, from, next) => {
-    let is_autorised = localStorage.getItem('TOKEN');
-    if (is_autorised) {
+    let ls_is_autorised = localStorage.getItem('TOKEN');
+    let ss_is_autorised = sessionStorage.getItem('TOKEN');
+    if (ls_is_autorised || ss_is_autorised) {
         next();
         return
     }

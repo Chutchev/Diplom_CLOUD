@@ -28,7 +28,7 @@ export default {
       try {
         document.querySelector('div.menu').setAttribute('style', 'display: none');
       }catch (e) {
-        console.log(e)
+        return
       }
 
     }

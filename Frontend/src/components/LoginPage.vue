@@ -5,8 +5,12 @@
         <form class="login-container" @submit="onSubmit">
             <p><input v-model="loginForm.email" type="email" placeholder="Email"></p>
             <p><input v-model="loginForm.pwd" type="password" placeholder="Password"></p>
-            <input type="submit" value="Log in" >
-            <div>{{this.isAutorised}}</div>
+            <div>
+                <input v-model="loginForm.remember" type="checkbox" value="Запомнить меня?" id="remember"
+                       name="remember">
+                <label for="remember">Запомнить</label>
+            </div>
+            <input type="submit" value="Log in">
         </form>
     </div>
 </template>
@@ -22,16 +26,17 @@
 
                     email: '',
                     pwd: '',
+                    remember: false
                 },
                 isAutorised: null
             }
         },
         methods: {
-            initForm(){
+            initForm() {
                 this.loginForm.email = '';
                 this.loginForm.pwd = '';
             },
-            async loginToCloud(login, password){
+            async loginToCloud(login, password) {
                 const url = 'http://127.0.0.1:5000/login';
                 let credentials = {
                     login,
@@ -39,7 +44,12 @@
                 };
                 await axios.post(url, credentials)
                     .then((response) => {
-                        localStorage.setItem('TOKEN', response.data['token']);
+                        if (this.loginForm.remember){
+                            localStorage.setItem('TOKEN', response.data['token']);
+                        }
+                        else {
+                            sessionStorage.setItem('TOKEN', response.data['token'])
+                        }
                         document.location.href = 'http://localhost:8080/files'
                     })
                     .catch(error => console.log('ОШИБКА!!!!: ' + error));
@@ -50,6 +60,9 @@
                 let pwd = this.loginForm.pwd;
                 await this.loginToCloud(login, pwd);
             }
+        },
+        mounted(){
+            console.log(this.loginForm.remember)
         }
     }
 </script>
@@ -81,11 +94,11 @@
         margin-right: auto;
         margin-left: auto;
         border: 12px solid transparent;
-        border-bottom-color: #28d;
+        border-bottom-color: #e67e22;
     }
 
     .login-header {
-        background: #28d;
+        background: #e67e22;
         padding: 20px;
         font-size: 1.4em;
         font-weight: normal;
@@ -130,18 +143,22 @@
     }
 
     .login input[type="submit"] {
-        background: #28d;
+        background: #e67e22;
         border-color: transparent;
         color: #fff;
         cursor: pointer;
     }
 
     .login input[type="submit"]:hover {
-        background: #17c;
+        background: #ff7700;
     }
 
     /* Buttons' focus effect */
     .login input[type="submit"]:focus {
-        border-color: #05a;
+        border-color: #f09a4f;
+    }
+    #remember {
+        display: inline-block;
+        width: auto;
     }
 </style>
