@@ -40,6 +40,10 @@ export default new Router({
             path: '/upload',
             beforeEnter: ifAuthenticated,
             component: () => import("@/components/UploadPage/UploadPage")
+        },
+        {
+            path: '/register',
+            component: () => import("@/components/RegisterPage/RegisterPage")
         }
     ]
 })
