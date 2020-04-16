@@ -1,22 +1,42 @@
 from django.shortcuts import render
+from rest_framework import status
+from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
-from rest_framework.views import APIView
-
+from rest_framework.generics import ListCreateAPIView, UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
+from LoginService.models import Profile
 from .serializer import *
+from requests.utils import quote, unquote
+
+class UploadFileView(ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = FileSerializer
+    parser_classes = [FileUploadParser, ]
+
+    def post(self, request, *args, **kwargs):
+        user = Profile.objects.get(user=self.request.user)
+        files = request.FILES
+        data = request.data
+        f = files['file']
+        f.name = unquote(f.name)
+        files.update({'user': user.pk})
+        file_serializer = FileSerializer(data=files)
+        if file_serializer.is_valid():
+            file_serializer.save()
+            return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FilesView(APIView):
-    def get(self, request):
-        files = File.objects.all()
-        serializer = FileSerializer(files, many=True)
-        return Response({'files': serializer.data})
+class FilesView(ListCreateAPIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = FileSerializer
+    parser_classes = [FileUploadParser]
 
-    def post(self, request):
-        files = request.data.get('files')
-        saved_files = []
-        for f in files:
-            serializer = FileSerializer(data=f)
-            if serializer.is_valid(raise_exception=True):
-                file_saved = serializer.save()
-                saved_files.append(file_saved.title)
-        return Response({'success': f'File {files} is saved'})
+    def get_queryset(self):
+        user = Profile.objects.get(user=self.request.user)
+        return File.objects.filter(user=user)
+
+
+
+

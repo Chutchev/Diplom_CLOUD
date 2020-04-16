@@ -5,7 +5,8 @@ from rest_framework.generics import ListCreateAPIView
 from rest_framework.authtoken.views import obtain_auth_token, ObtainAuthToken
 from .serialize import *
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.response import Response
 
 # Create your views here.
 
@@ -23,9 +24,6 @@ class UserList(ListCreateAPIView):
            return Response({'success': f'User {user_saved.username} is added'})
         return Response({'success': f'User is not added'})
 
-
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.response import Response
 
 class GetToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
