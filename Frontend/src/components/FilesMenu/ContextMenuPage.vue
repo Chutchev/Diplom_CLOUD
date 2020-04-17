@@ -4,7 +4,7 @@
             <li>Меню файла</li><hr>
             <li data-action="Delete" @click="this.deleteFile">Удалить файл</li>
             <li data-action="CopyUrl" @click="this.copyFileUrl">Копировать ссылку на файл</li>
-            <li data-action="Download" @click="this.downloadFile">Скачать файл</li>
+            <li data-action="Download" @click="this.downloadWithAxios">Скачать файл</li>
         </ul>
     </div>
 </template>
@@ -43,7 +43,6 @@
                 this.$emit('eventFromContextMenu', {
                     element: this.element,
                 })
-                // this.element.remove();
             },
             copyFileUrl(eventObject) {
                 let copyForm = document.getElementsByClassName('row_pop-up')[0];
@@ -51,12 +50,25 @@
                                                                     display: inline-block;
                                                                     left: ${eventObject.x}px`);
             },
-            downloadFile(){
-                let link = document.createElement('a');
-                link.href = this.url;
+            downloadFile(response){
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', this.title);
                 document.body.appendChild(link);
-                link.click();
-                link.remove();
+                link.click()
+            },
+            downloadWithAxios(){
+                axios({
+                    method: 'get',
+                    url: this.url,
+                    responseType: 'arraybuffer'
+                })
+                    .then(response => {
+                        this.downloadFile(response)
+
+                    })
+                    .catch(() => console.log('error occured'))
             }
         },
     }

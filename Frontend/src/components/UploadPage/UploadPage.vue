@@ -45,28 +45,25 @@
             },
             async uploadFile() {
                 const url = 'http://127.0.0.1:8000/api/files/upload';
+                let formData = new FormData();
                 for (var i = 0; i < this.files.length; i++) {
-                    let formData = new FormData();
                     let file = this.files[i];
-                    let filename = file.name.toString();
-                    // filename = encodeURI(filename);
-                    formData.append(`file[${i}]`, file);
-                    await axios.post(url, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data; charset=utf-8',
-                            'authorization': `Token ${localStorage.getItem("TOKEN")}`,
-                            'Content-Disposition': `attachment; filename="${encodeURIComponent(filename)}"`
-                        },
-                        onUploadProgress: function (progressEvent) {
-                            this.loading = true;
-                            this.uploadPercentage = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
-                        }.bind(this)
-                    }).then(response => {
-                        console.log(response.data)
-                    });
+                    // let filename = file.name.toString();
+                    formData.append(`file`, file);
                 }
-
-
+                await axios.post(url, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data; charset=utf-8',
+                        'authorization': `Token ${localStorage.getItem("TOKEN")}`,
+                        // 'Content-Disposition': `attachment; filename="${encodeURIComponent(filename)}"`
+                    },
+                    onUploadProgress: function (progressEvent) {
+                        this.loading = true;
+                        this.uploadPercentage = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+                    }.bind(this)
+                }).then(response => {
+                    console.log(response.data)
+                });
                 location.reload()
             }
         },

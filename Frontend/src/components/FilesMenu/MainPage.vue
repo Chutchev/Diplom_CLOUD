@@ -43,31 +43,28 @@
             async deleteFileFromUI() {
                 delete this.files[this.activeFile];
                 await this.getFiles();
-                // location.reload();
             },
             getUrl() {
                 return this.$route.path
             },
             async getFiles() {
-                let url = 'http://127.0.0.1:6556/files';
+                let url = 'http://127.0.0.1:8000/api/files/';
                 let token = localStorage.getItem('TOKEN');
-                let params = {
-                    token
-                };
-                await axios.post(url, params).then(response => {
+                await axios.get(url, {
+                    headers: {
+                        'authorization': `Token ${token}`
+                    }
+                }).then(response => {
                     this.filesinfos = response.data;
                 });
                 let files = [];
-                let i = 0;
                 // [filename, path, author, type, md5]
-                this.filesinfos.forEach(file => {
+                this.filesinfos.forEach((file) => {
                     files.push({
-                        title: file[0],
-                        author: file[2],
-                        filepath: file[1],
-                        filetype: file[3],
-                        id: i++
-                    })
+                        url: file['file'],
+                        title: file['name'],
+                        id: file['id']
+                    });
                 });
                 this.files = files;
             },
@@ -87,7 +84,7 @@
                 }
                 this.url = parent.getAttribute('data-url');
                 this.element = parent;
-                console.log(this.url);
+                console.log("asd", this.url);
             });
         },
     }

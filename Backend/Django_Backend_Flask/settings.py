@@ -62,7 +62,7 @@ CORS_ORIGIN_WHITELIST = [
 ROOT_URLCONF = 'Django_Backend_Flask.urls'
 MEDIA_ROOT = os.path.abspath('./FILES')
 
-MEDIA_URL = 'http://localhost:8000/files/list/'
+MEDIA_URL = '/media/'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
