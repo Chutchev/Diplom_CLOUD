@@ -2,10 +2,10 @@
     <div id="loader" v-if="this.loading"><img src="../../assets/images/loader.gif"/></div>
     <div class="files" v-else>
             <transition-group name="fade" tag="ul" class="cards">
-                <FileInfo v-for="(file, index) in files" :key="index" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
+                <FileInfo v-for="file in files" :key="file.id" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
             </transition-group>
         <ContextMenuPage @eventFromContextMenu="this.deleteFileFromUI" v-bind:title="this.title" v-bind:url="this.url"
-                         v-bind:element="this.element" v-bind:file="this.file"/>
+                         v-bind:element="this.element" v-bind:file="this.file" v-bind:id="this.id"/>
         <CopyUrlHTML v-bind:url="this.url"/>
     </div>
 </template>
@@ -27,7 +27,8 @@
                 show: true,
                 file: null,
                 activeFile: null,
-                loading: true
+                loading: true,
+                id: null
             }
         },
         components: {
@@ -58,7 +59,6 @@
                     this.filesinfos = response.data;
                 });
                 let files = [];
-                // [filename, path, author, type, md5]
                 this.filesinfos.forEach((file) => {
                     files.push({
                         url: file['file'],
@@ -84,7 +84,7 @@
                 }
                 this.url = parent.getAttribute('data-url');
                 this.element = parent;
-                console.log("asd", this.url);
+                this.id = parent.getAttribute('id')
             });
         },
     }
@@ -101,11 +101,10 @@
     }
 
     .fade-move{
-        transition: transform 0.1s;
-        opacity: 0;
+        transition: transform 1s;
     }
-    li.cards__item {
-        margin-left: auto;
-        margin-right: auto
+    li#cards__item {
+        float: left;
+        transition: all 1s;
     }
 </style>

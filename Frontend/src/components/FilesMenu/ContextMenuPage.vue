@@ -20,6 +20,9 @@
             url: {
               type: String
             },
+            id: {
+              type: String
+            },
             element: null,
             file: null
         },
@@ -29,15 +32,17 @@
             }
         },
         methods: {
-            deleteFile() {
-                const url = 'http://127.0.0.1:6556/files';
-                const token = localStorage.getItem('TOKEN');
-                let params = {
-                    filename: this.title,
-                    token: token,
-                    'DELETE': true
-                };
-                axios.post(url, params).then(response => {
+            async deleteFile() {
+                const url = 'http://127.0.0.1:8000/api/files/upload';
+                console.log(this);
+                await axios.delete(url, {
+                    headers: {
+                        'authorization': `Token ${localStorage.getItem("TOKEN")}`,
+                    },
+                    data: {
+                        id: this.id
+                    }
+                }).then(response => {
                     console.log('FILE DELETED', response.data);
                 });
                 this.$emit('eventFromContextMenu', {
