@@ -47,6 +47,7 @@
                     .then((response) => {
                         if (this.loginForm.remember){
                             localStorage.setItem('TOKEN', response.data['token']);
+                            sessionStorage.setItem('TOKEN', response.data['token']);
                         }
                         else {
                             sessionStorage.setItem('TOKEN', response.data['token'])

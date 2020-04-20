@@ -12,7 +12,7 @@
             <li v-for="(file, key) in files" :key="key" class="file-listing">{{ file.name }} <span
                     class="remove-file" @click="removeFile(key)">X</span></li>
         </ul>
-        <progress max="100" v-if="this.loading==true" :value.prop="uploadPercentage"></progress>
+        <progress max="100" v-if="this.loading===true" :value.prop="uploadPercentage"></progress>
         <button v-if="this.files.length > 0" @click="this.uploadFile">Загрузить</button>
     </div>
 </template>
@@ -44,7 +44,7 @@
                 }
             },
             async uploadFile() {
-                const url = 'http://127.0.0.1:8000/api/files/upload';
+                const url = 'http://127.0.0.1:8000/api/files/';
 
                 for (var i = 0; i < this.files.length; i++) {
                     let formData = new FormData();
