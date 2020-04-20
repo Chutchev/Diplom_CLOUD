@@ -44,23 +44,27 @@
                 }
             },
             async uploadFile() {
-                const url = 'http://127.0.0.1:6556/upload';
-                let formData = new FormData();
+                const url = 'http://127.0.0.1:8000/api/files/upload';
+
                 for (var i = 0; i < this.files.length; i++) {
+                    let formData = new FormData();
                     let file = this.files[i];
-                    formData.append('files[' + i + ']', file);
+                    // let filename = file.name.toString();
+                    formData.append(`file`, file);
+                    await axios.post(url, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data; charset=utf-8',
+                            'authorization': `Token ${localStorage.getItem("TOKEN")}`,
+                        },
+                        onUploadProgress: function (progressEvent) {
+                            this.loading = true;
+                            this.uploadPercentage = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+                        }.bind(this)
+                    }).then(response => {
+                        console.log(response.data)
+                    });
                 }
-                await axios.post(url, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    onUploadProgress: function (progressEvent) {
-                        this.loading = true;
-                        this.uploadPercentage = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
-                    }.bind(this)
-                }).then(response => {
-                    console.log(response.data)
-                })
+
                 location.reload()
             }
         },

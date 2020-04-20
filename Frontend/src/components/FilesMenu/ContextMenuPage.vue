@@ -4,7 +4,7 @@
             <li>Меню файла</li><hr>
             <li data-action="Delete" @click="this.deleteFile">Удалить файл</li>
             <li data-action="CopyUrl" @click="this.copyFileUrl">Копировать ссылку на файл</li>
-            <li data-action="Download" @click="this.downloadFile">Скачать файл</li>
+            <li data-action="Download" @click="this.downloadWithAxios">Скачать файл</li>
         </ul>
     </div>
 </template>
@@ -20,6 +20,9 @@
             url: {
               type: String
             },
+            id: {
+              type: String
+            },
             element: null,
             file: null
         },
@@ -29,21 +32,22 @@
             }
         },
         methods: {
-            deleteFile() {
-                const url = 'http://127.0.0.1:6556/files';
-                const token = localStorage.getItem('TOKEN');
-                let params = {
-                    filename: this.title,
-                    token: token,
-                    'DELETE': true
-                };
-                axios.post(url, params).then(response => {
+            async deleteFile() {
+                const url = 'http://127.0.0.1:8000/api/files/upload';
+                console.log(this);
+                await axios.delete(url, {
+                    headers: {
+                        'authorization': `Token ${localStorage.getItem("TOKEN")}`,
+                    },
+                    data: {
+                        id: this.id
+                    }
+                }).then(response => {
                     console.log('FILE DELETED', response.data);
                 });
                 this.$emit('eventFromContextMenu', {
                     element: this.element,
                 })
-                // this.element.remove();
             },
             copyFileUrl(eventObject) {
                 let copyForm = document.getElementsByClassName('row_pop-up')[0];
@@ -51,12 +55,25 @@
                                                                     display: inline-block;
                                                                     left: ${eventObject.x}px`);
             },
-            downloadFile(){
-                let link = document.createElement('a');
-                link.href = this.url;
+            downloadFile(response){
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', this.title);
                 document.body.appendChild(link);
-                link.click();
-                link.remove();
+                link.click()
+            },
+            downloadWithAxios(){
+                axios({
+                    method: 'get',
+                    url: this.url,
+                    responseType: 'arraybuffer'
+                })
+                    .then(response => {
+                        this.downloadFile(response)
+
+                    })
+                    .catch(() => console.log('error occured'))
             }
         },
     }

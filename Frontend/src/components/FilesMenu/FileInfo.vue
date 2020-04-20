@@ -1,5 +1,5 @@
 <template>
-        <li class="cards__item" :data-url="`http://127.0.0.1:6556/files/${file.title}`" :id="file.id">
+        <li class="cards__item" :data-url="`${file.url}`" :id="file.id">
             <div class="card" @contextmenu="this.showContextMenu">
                 <div class="card__image card__image--fence"></div>
                 <div class="card__content">

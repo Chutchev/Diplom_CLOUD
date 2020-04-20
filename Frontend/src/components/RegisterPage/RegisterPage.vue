@@ -1,17 +1,12 @@
 <template>
     <div class="login">
         <div class="login-triangle"></div>
-        <h2 class="login-header">Log in</h2>
+        <h2 class="login-header">Регистрация</h2>
         <form class="login-container" @submit="onSubmit">
-            <p><input v-model="loginForm.login" type="textarea" placeholder="login"></p>
-            <p><input v-model="loginForm.pwd" type="password" placeholder="Password"></p>
-            <div>
-                <input v-model="loginForm.remember" type="checkbox" value="Запомнить меня?" id="remember"
-                       name="remember">
-                <label for="remember">Запомнить</label>
-            </div>
-            <small><a href="/register">Зарегистрироваться!</a></small>
-            <input type="submit" value="Log in">
+            <p><input v-model="loginForm.login" type="textarea" placeholder="Введите ваш логин"></p>
+            <p><input v-model="loginForm.pwd" type="password" placeholder="Введите ваш пароль"></p>
+            <p><input v-model="loginForm.email" type="email" placeholder="Введите вашу эл. почту"></p>
+            <input type="submit" value="Зарегистрироваться">
         </form>
     </div>
 </template>
@@ -20,41 +15,36 @@
     import axios from 'axios';
 
     export default {
-        name: "LoginPage",
+        name: "RegisterPage",
         data() {
             return {
                 loginForm: {
-
                     login: '',
                     pwd: '',
-                    remember: false
+                    email: ''
                 },
-                isAutorised: null
             }
         },
         methods: {
             initForm() {
                 this.loginForm.login = '';
                 this.loginForm.pwd = '';
+                this.loginForm.email = '';
             },
-            async loginToCloud(login, password) {
-                const url = 'http://127.0.0.1:8000/api/authtoken/';
+            async loginToCloud(login, password, email) {
+                const url = 'http://127.0.0.1:8000/api/user/';
                 let credentials = {
-                    username: login,
-                    password: password
+                    'user': {
+                        username: login,
+                        password: password,
+                        email: email
+                    }
                 };
                 await axios.post(url, credentials)
                     .then((response) => {
-                        if (this.loginForm.remember){
-                            localStorage.setItem('TOKEN', response.data['token']);
-                        }
-                        else {
-                            sessionStorage.setItem('TOKEN', response.data['token'])
-                        }
-                        if (response.data['token']) {
-                            document.location.href = 'http://localhost:8080/files'
-                        }
-                        else {
+                        if (response.data['success']) {
+                            document.location.href = 'http://localhost:8080/login'
+                        } else {
                             alert('Вы ввели что то неверно!')
                         }
                     })
@@ -64,12 +54,10 @@
                 evt.preventDefault();
                 let login = this.loginForm.login;
                 let pwd = this.loginForm.pwd;
-                await this.loginToCloud(login, pwd);
+                let email = this.loginForm.email;
+                await this.loginToCloud(login, pwd, email);
             }
         },
-        mounted(){
-            console.log(this.loginForm.remember)
-        }
     }
 </script>
 
@@ -163,6 +151,7 @@
     .login input[type="submit"]:focus {
         border-color: #f09a4f;
     }
+
     #remember {
         display: inline-block;
         width: auto;

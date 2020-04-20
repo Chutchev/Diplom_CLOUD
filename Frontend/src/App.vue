@@ -1,6 +1,6 @@
 <template>
   <div id="app" @click="this.offContextMenu">
-    <MainInfoBar v-if="getUrl() != '/login'"/>
+    <MainInfoBar v-show="this.getUrl()"/>
     <router-view/>
   </div>
 </template>
@@ -19,7 +19,13 @@ export default {
   },
   methods: {
     getUrl() {
-      return this.$route.path
+      let url = this.$route.path;
+      if (url == '/login' || url == '/register'){
+        return false;
+      }
+      else {
+        return true;
+      }
     },
     offStandartContextMenu(){
       document.oncontextmenu = function (){return false};
@@ -35,7 +41,6 @@ export default {
   },
   mounted() {
     this.offStandartContextMenu();
-
   }
 }
 </script>
