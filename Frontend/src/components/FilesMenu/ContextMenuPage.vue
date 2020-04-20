@@ -33,7 +33,7 @@
         },
         methods: {
             async deleteFile() {
-                const url = 'http://127.0.0.1:8000/api/files/upload';
+                const url = 'http://127.0.0.1:8000/api/files/';
                 console.log(this);
                 await axios.delete(url, {
                     headers: {
