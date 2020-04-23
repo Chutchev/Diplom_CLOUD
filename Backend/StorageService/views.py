@@ -27,12 +27,13 @@ class FilesView(ListCreateAPIView, DestroyAPIView):
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
-        try:
-            deleted_file = File.objects.get(id=request.data['id'])
-            delete_file(deleted_file.path.location, deleted_file.name)
-            deleted_file.delete()
+        user = Profile.objects.get(user=self.request.user)
+        deleted_file = File.objects.filter(id=request.data['id'], user=user)
+        if deleted_file:
+            delete_file(deleted_file[0].path.location, deleted_file[0].name)
+            deleted_file[0].delete()
             return Response({"SUCCESS": "FILE WAS DELETED"}, status=status.HTTP_200_OK)
-        except File.DoesNotExist:
+        else:
             return Response({'ERROR': 'File matching query does not exist'}, status=status.HTTP_200_OK)
 
     def get_queryset(self):
