@@ -29,7 +29,7 @@ export default new Router({
         },
         {
             path: '/login',
-            component: () => import("@/components/LoginPage")
+            component: () => import("@/components/RegisterPage/LoginPage")
         },
         {
             path: '/me',
