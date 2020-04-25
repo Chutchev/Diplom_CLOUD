@@ -1,20 +1,48 @@
 <template>
-    <div>
-        <form>
-            <h1>Upload Page</h1>
-            <input type="file" class="inputfile" id="files" ref="files" placeholder="Выберите файл"
-                   @change="this.handleFileUploads"
-                   multiple/>
-            <div id="AddButton" @click="this.addFile"><p id="textAdd">Выбрать файлы</p></div>
+    <!--    <div>-->
+    <!--        <form>-->
+    <!--            <h1>Upload Page</h1>-->
+    <!--            <input type="file" class="inputfile" id="files" ref="files" placeholder="Выберите файл"-->
+    <!--                   @change="this.handleFileUploads"-->
+    <!--                   multiple/>-->
+    <!--            <div id="AddButton" @click="this.addFile"><p id="textAdd">Выбрать файлы</p></div>-->
+    <!--            <hr>-->
+    <!--        </form>-->
+    <!--        <ul class="large-12 medium-12 small-12 cell" id="border">-->
+    <!--            <li v-for="(file, key) in files" :key="key" class="file-listing">{{ file.name }} <span-->
+    <!--                    class="remove-file" @click="removeFile(key)">X</span></li>-->
+    <!--        </ul>-->
+    <!--        <progress max="100" v-if="this.loading===true" :value.prop="uploadPercentage"></progress>-->
+    <!--        <button v-if="this.files.length > 0" @click="this.uploadFile">Загрузить</button>-->
+    <!--    </div>-->
+    <v-container>
+        <v-content>
+            <h1 class="display-3">Загрузка файлов</h1>
+            <v-file-input multiple label="Выберите файлы" id="files" ref="files"
+                          @change="this.handleFileUploads"></v-file-input>
             <hr>
-        </form>
-        <ul class="large-12 medium-12 small-12 cell" id="border">
-            <li v-for="(file, key) in files" :key="key" class="file-listing">{{ file.name }} <span
-                    class="remove-file" @click="removeFile(key)">X</span></li>
-        </ul>
-        <progress max="100" v-if="this.loading===true" :value.prop="uploadPercentage"></progress>
-        <button v-if="this.files.length > 0" @click="this.uploadFile">Загрузить</button>
-    </div>
+
+            <v-list-item
+                    v-for="(item, index) in files"
+                    :key="item.id"
+            >
+                <v-list-item-content>
+                    <v-list-item-title v-text="item.file.name"></v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-icon>
+                    <v-btn icon @click="removeFile(index)">
+                        <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                </v-list-item-icon>
+            </v-list-item>
+        </v-content>
+        <v-btn x-large color="blue-grey" dark @click="uploadFile">
+            Загрузить
+            <v-icon x-large right>
+                mdi-file-upload
+            </v-icon>
+        </v-btn>
+    </v-container>
 </template>
 
 <script>
@@ -30,17 +58,14 @@
             }
         },
         methods: {
-            addFile() {
-                this.$refs.files.click()
-
-            },
             removeFile(key) {
+                console.log(key);
                 this.files.splice(key, 1);
             },
             handleFileUploads() {
-                let uploadedFiles = this.$refs.files.files;
+                let uploadedFiles = this.$refs.files.lazyValue;
                 for (var i = 0; i < uploadedFiles.length; i++) {
-                    this.files.push(uploadedFiles[i]);
+                    this.files.push({file: uploadedFiles[i], id: i});
                 }
             },
             async uploadFile() {
@@ -48,18 +73,15 @@
 
                 for (var i = 0; i < this.files.length; i++) {
                     let formData = new FormData();
-                    let file = this.files[i];
+                    let file = this.files[i].file;
+                    console.log(this.files);
                     // let filename = file.name.toString();
                     formData.append(`file`, file);
                     await axios.post(url, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data; charset=utf-8',
                             'authorization': `Token ${localStorage.getItem("TOKEN")}`,
-                        },
-                        onUploadProgress: function (progressEvent) {
-                            this.loading = true;
-                            this.uploadPercentage = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
-                        }.bind(this)
+                        }
                     }).then(response => {
                         console.log(response.data)
                     });
@@ -136,7 +158,8 @@
         margin-bottom: 10px;
         width: 70%;
     }
-    #border li span{
+
+    #border li span {
         float: right;
     }
 </style>

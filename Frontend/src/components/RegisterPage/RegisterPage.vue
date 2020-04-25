@@ -1,14 +1,53 @@
 <template>
-    <div class="login">
-        <div class="login-triangle"></div>
-        <h2 class="login-header">Регистрация</h2>
-        <form class="login-container" @submit="onSubmit">
-            <p><input v-model="loginForm.login" type="textarea" placeholder="Введите ваш логин"></p>
-            <p><input v-model="loginForm.pwd" type="password" placeholder="Введите ваш пароль"></p>
-            <p><input v-model="loginForm.email" type="email" placeholder="Введите вашу эл. почту"></p>
-            <input type="submit" value="Зарегистрироваться">
-        </form>
-    </div>
+    <v-card
+            class="mx-auto"
+            width="35%"
+            elevation="6"
+            style="margin: auto">
+        <v-card-title class="d-inline-block text-truncate text-uppercase"
+                      style="width: 100%; background: #1E1E1E; color: white">
+            Войти
+        </v-card-title>
+        <v-form
+                ref="form"
+                v-model="valid"
+        >
+            <v-text-field
+                    v-model="form.name"
+                    :rules="nameRules"
+                    label="Логин"
+                    required
+                    style="width: 90%; margin: auto;"
+            ></v-text-field>
+
+            <v-text-field
+                    v-model="form.email"
+                    :rules="emailRules"
+                    label="E-mail"
+                    required
+                    style="width: 90%; margin: auto;"
+            ></v-text-field>
+            <v-text-field
+                    v-model="form.pwd"
+                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                    :rules="passwordRules"
+                    :type="show1 ? 'text' : 'password'"
+                    name="input-10-1"
+                    label="Пароль"
+                    hint="Минимум 8 символов"
+                    counter
+                    @click:append="show1 = !show1"
+                    style="width: 90%; margin: auto;"
+            ></v-text-field>
+            <v-btn
+                    class="mr-4"
+                    @click="this.onSubmit"
+                    style="margin-bottom: 10px"
+            >
+                Зарегистрироваться!
+            </v-btn>
+        </v-form>
+    </v-card>
 </template>
 
 <script>
@@ -18,20 +57,32 @@
         name: "RegisterPage",
         data() {
             return {
-                loginForm: {
-                    login: '',
+                form: {
+                    name: '',
                     pwd: '',
                     email: ''
                 },
+                valid: true,
+                nameRules: [
+                    v => !!v || 'Name is required',
+                    v => (v && v.length > 2) || 'Имя должно быть длиннее 2-х символов',
+                ],
+                emailRules: [
+                    v => !!v || 'E-mail is required',
+                    v => /.+@.+\..+/.test(v) || 'Введите верный email',
+                ],
+                passwordRules: [
+                    v => !!v || 'Password is required',
+                    v => (v && v.length >= 8) || 'Длина пароля должна быть больше 8 символов',
+                ],
+                select: null,
+                checkbox: false,
+                show1: false
             }
         },
         methods: {
-            initForm() {
-                this.loginForm.login = '';
-                this.loginForm.pwd = '';
-                this.loginForm.email = '';
-            },
             async loginToCloud(login, password, email) {
+                console.log(password);
                 const url = 'http://127.0.0.1:8000/api/user/';
                 let credentials = {
                     'user': {
@@ -52,9 +103,9 @@
             },
             async onSubmit(evt) {
                 evt.preventDefault();
-                let login = this.loginForm.login;
-                let pwd = this.loginForm.pwd;
-                let email = this.loginForm.email;
+                let login = this.form.name;
+                let pwd = this.form.pwd;
+                let email = this.form.email;
                 await this.loginToCloud(login, pwd, email);
             }
         },

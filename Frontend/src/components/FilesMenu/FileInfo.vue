@@ -1,172 +1,148 @@
 <template>
-        <li class="cards__item" :data-url="`${file.url}`" :id="file.id">
-            <div class="card" @contextmenu="this.showContextMenu">
-                <div class="card__image card__image--fence"></div>
-                <div class="card__content">
-                    <div class="card__title">{{file.title}}</div>
-                    <p class="card__text">This is the shorthand for flex-grow, flex-shrink and flex-basis combined. The
-                        second and third parameters (flex-shrink and flex-basis) are optional. Default is 0 1 auto. </p>
-                </div>
-            </div>
-        </li>
+    <div style="display: inline-block;
+                   margin-right: 10px;
+                   margin-top: 10px">
+        <transition name="fade">
+            <v-card
+                    class="mx-auto"
+                    max-width="344"
+                    elevation="6"
+                    v-show="this.show"
+            >
+                <v-img
+                        src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+                        height="200px"
+                ></v-img>
+
+                <v-card-title class="d-inline-block text-truncate text-uppercase" style="max-width: 320px;">
+                    {{file.title}}
+                </v-card-title>
+                <v-card-actions>
+                    <v-btn icon @click="this.downloadWithAxios">
+                        <v-icon large>mdi-file-download</v-icon>
+                    </v-btn>
+                    <v-btn icon @click.stop="dialog = true">
+                        <v-icon large>mdi-share-variant</v-icon>
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="this.deleteFileFunc">
+                        <v-icon large>mdi-delete</v-icon>
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </transition>
+        <v-dialog
+                v-model="dialog"
+                width="500"
+        >
+
+            <v-card>
+                <v-card-title
+                        class="headline grey lighten-2"
+                        primary-title
+                >
+                    URL - для общего доступа
+                </v-card-title>
+                <br>
+                <v-card-text>
+                    {{this.file.url}}
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                            color="primary"
+                            text
+                            @click="dialog = false"
+                    >
+                        Закрыть
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </div>
+
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
+        data() {
+            return {
+                show: true,
+                dialog: false,
+            }
+        },
         props: {
             file: {
                 type: Object,
                 required: true
             },
-            deleteFile: null
+            deleteFile: null,
         },
         methods: {
-            showContextMenu(eventObject) {
-                document.querySelector('div.menu').setAttribute('style', 'display: block');
-                let styleForMenu = `top: ${eventObject.pageY}px;
-                                     left: ${eventObject.pageX}px;
-                                     position: absolute;
-                                     display: inline-block;
-                                     padding-left: 0`;
-                let menuElement = document.querySelector('div.menu > ul');
-                menuElement.setAttribute('style', styleForMenu);
-                this.$emit('activeFile', {
-                    file: this.file
+            async deleteFileFunc() {
+                const url = 'http://127.0.0.1:8000/api/files/';
+                await axios.delete(url, {
+                    headers: {
+                        'authorization': `Token ${localStorage.getItem("TOKEN")}`,
+                    },
+                    data: {
+                        id: this.file.id
+                    }
+                }).then(response => {
+                    console.log('FILE DELETED', response.data);
                 });
-                return false;
+                this.show = false;
             },
+            downloadFile(response) {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', this.file.title);
+                document.body.appendChild(link);
+                link.click()
+            },
+            downloadWithAxios() {
+                axios({
+                    method: 'get',
+                    url: this.file.url,
+                    responseType: 'arraybuffer'
+                })
+                    .then(response => {
+                        this.downloadFile(response)
+                    })
+                    .catch(() => console.log('error occured'))
+            },
+            showDialog() {
+                this.dialog_show = true;
+                console.log('нажато!')
+            }
         },
-        mounted(){
+        mounted() {
 
         }
     }
 </script>
 
 <style scoped>
-    @gray-darker :               #444444;
-    @gray-dark :                 #696969;
-    @gray :                      #999999;
-    @gray-light :                #cccccc;
-    @gray-lighter :              #ececec;
-    @gray-lightest :             lighten(@gray-lighter ,4%);
-
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 1s;
     }
 
-    html {
-        background-color: #f0f0f0;
+    .fade-leave-to, .fade-enter-to {
+        opacity: 0;
     }
 
-    body {
-        color: @gray;
-        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-style: normal;
-        font-weight: 400;
-        letter-spacing: 0;
-        padding: 1rem;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        -moz-font-feature-settings: "liga" on;
+    .fade-move {
+        transition: transform 1s;
     }
 
-    img {
-        height: auto;
-        max-width: 100%;
-        vertical-align: middle;
-    }
-
-    .btn {
-        background-color: white;
-        border: 1px solid @gray-light;
-    //border-radius: 1rem; color: @gray-dark; padding: 0.5rem; text-transform: lowercase;
-    }
-
-    .btn--block {
-        display: block;
-        width: 100%;
-    }
-
-    .cards {
-        display: flex;
-        flex-wrap: wrap;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .cards__item {
-        display: inline-block;
-        padding: 1rem;
-        width: 250px;
-    }
-
-    .card {
-        background-color: white;
-        border-radius: 0.25rem;
-        box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-
-        &:hover {
-            .card__image {
-                filter: contrast(100%);
-            }
-        }
-    }
-
-    .card__content {
-        display: flex;
-        flex: 1 1 auto;
-        flex-direction: column;
-        padding: 1rem;
-    }
-
-    .card__image {
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        border-top-left-radius: 0.25rem;
-        border-top-right-radius: 0.25rem;
-        filter: contrast(70%);
-    //filter: saturate(180%); overflow: hidden; position: relative; transition: filter 0.5s cubic-bezier(.43, .41, .22, .91);;
-
-        &::before {
-            content: "";
-            display: block;
-            padding-top: 56.25%;
-        }
-
-        @media (min-width: 40rem) {
-            &::before {
-                padding-top: 66.6%;
-            }
-        }
-    }
-
-    .card__title {
-        color: @gray-dark;
-        font-size: 1.25rem;
-        font-weight: 300;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .card__text {
-        flex: 1 1 auto;
-        font-size: 0.875rem;
-        line-height: 1.5;
-        margin-bottom: 1.25rem;
-    }
-
-    a, a:link {
-        text-decoration: none;
-        color: #2c3e50;
+    li#cards__item {
+        float: left;
+        transition: all 1s;
     }
 </style>
