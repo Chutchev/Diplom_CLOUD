@@ -88,7 +88,7 @@
                 const url = 'http://127.0.0.1:8000/api/files/';
                 await axios.delete(url, {
                     headers: {
-                        'authorization': `Token ${localStorage.getItem("TOKEN")}`,
+                        'authorization': `Token ${sessionStorage.getItem("TOKEN")}`,
                     },
                     data: {
                         id: this.file.id
@@ -117,10 +117,6 @@
                     })
                     .catch(() => console.log('error occured'))
             },
-            showDialog() {
-                this.dialog_show = true;
-                console.log('нажато!')
-            }
         },
         mounted() {
 

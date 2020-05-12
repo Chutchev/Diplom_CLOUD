@@ -12,7 +12,7 @@
             <v-icon>mdi-cloud</v-icon>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon onclick="">
+            <v-btn icon @click="this.LogOut">
                 <v-icon large>mdi-exit-to-app</v-icon>
             </v-btn>
         </v-app-bar>
@@ -57,6 +57,13 @@
         data: () => ({
             drawer: false,
         }),
+        methods: {
+            LogOut(){
+                window.location.href='/login';
+                localStorage.removeItem('TOKEN');
+                sessionStorage.removeItem('TOKEN');
+            }
+        }
     }
 
 </script>

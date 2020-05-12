@@ -37,7 +37,7 @@
             },
             async getFiles() {
                 let url = 'http://127.0.0.1:8000/api/files/';
-                let token = localStorage.getItem('TOKEN');
+                let token = sessionStorage.getItem('TOKEN');
                 await axios.get(url, {
                     headers: {
                         'authorization': `Token ${token}`

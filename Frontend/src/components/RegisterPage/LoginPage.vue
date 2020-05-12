@@ -36,7 +36,7 @@
                 <v-btn text color="primary">Зарегистрируйтесь!</v-btn>
             </v-card-text>
             <v-checkbox
-                    v-model="checkbox"
+                    v-model="form.remember"
                     label="Запомнить меня?"
                     style="margin-left: 25px;"
             ></v-checkbox>
@@ -62,7 +62,7 @@
                 form: {
                     name: '',
                     pwd: '',
-                    email: ''
+                    remember: false
                 },
                 valid: true,
                 nameRules: [
@@ -85,13 +85,15 @@
             },
             async loginToCloud(login, password) {
                 const url = 'http://127.0.0.1:8000/api/authtoken/';
+                console.log(login)
                 let credentials = {
                     username: login,
                     password: password
                 };
                 await axios.post(url, credentials)
                     .then((response) => {
-                        if (this.loginForm.remember){
+                        console.log(response.data);
+                        if (this.form.remember){
                             localStorage.setItem('TOKEN', response.data['token']);
                             sessionStorage.setItem('TOKEN', response.data['token']);
                         }
@@ -109,13 +111,13 @@
             },
             async onSubmit(evt) {
                 evt.preventDefault();
-                let login = this.form.login;
+                let login = this.form.name;
                 let pwd = this.form.pwd;
                 await this.loginToCloud(login, pwd);
             }
         },
         mounted() {
-            console.log(this.loginForm.remember)
+            console.log(this.form.remember)
         }
     }
 </script>

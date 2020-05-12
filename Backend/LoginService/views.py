@@ -29,5 +29,6 @@ class GetToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         try:
             return super().post(request, *args, **kwargs)
-        except Exception:
+        except Exception as e:
+            print(e)
             return Response({'FAILED': True})
