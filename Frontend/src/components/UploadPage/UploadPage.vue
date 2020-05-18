@@ -1,20 +1,4 @@
 <template>
-    <!--    <div>-->
-    <!--        <form>-->
-    <!--            <h1>Upload Page</h1>-->
-    <!--            <input type="file" class="inputfile" id="files" ref="files" placeholder="Выберите файл"-->
-    <!--                   @change="this.handleFileUploads"-->
-    <!--                   multiple/>-->
-    <!--            <div id="AddButton" @click="this.addFile"><p id="textAdd">Выбрать файлы</p></div>-->
-    <!--            <hr>-->
-    <!--        </form>-->
-    <!--        <ul class="large-12 medium-12 small-12 cell" id="border">-->
-    <!--            <li v-for="(file, key) in files" :key="key" class="file-listing">{{ file.name }} <span-->
-    <!--                    class="remove-file" @click="removeFile(key)">X</span></li>-->
-    <!--        </ul>-->
-    <!--        <progress max="100" v-if="this.loading===true" :value.prop="uploadPercentage"></progress>-->
-    <!--        <button v-if="this.files.length > 0" @click="this.uploadFile">Загрузить</button>-->
-    <!--    </div>-->
     <v-container>
         <v-content>
             <h1 class="display-3">Загрузка файлов</h1>
@@ -80,7 +64,7 @@
                     await axios.post(url, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data; charset=utf-8',
-                            'authorization': `Token ${localStorage.getItem("TOKEN")}`,
+                            'authorization': `Token ${sessionStorage.getItem("TOKEN")}`,
                         }
                     }).then(response => {
                         console.log(response.data)

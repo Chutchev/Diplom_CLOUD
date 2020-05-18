@@ -12,6 +12,8 @@
             <v-icon>mdi-cloud</v-icon>
             </v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-toolbar-title>{{login}}
+            </v-toolbar-title>
             <v-btn icon @click="this.LogOut">
                 <v-icon large>mdi-exit-to-app</v-icon>
             </v-btn>
@@ -52,10 +54,12 @@
 </template>
 
 <script>
+    import axios from 'axios'
     export default {
         name: "MainInfoBar",
         data: () => ({
             drawer: false,
+            login: 'Your Nickname'
         }),
         methods: {
             LogOut(){
@@ -63,6 +67,18 @@
                 localStorage.removeItem('TOKEN');
                 sessionStorage.removeItem('TOKEN');
             }
+        },
+        async mounted(){
+            let self = this;
+            const url = 'http://127.0.0.1:8000/api/user/';
+            let token = sessionStorage.getItem('TOKEN');
+            await axios.get(url, {
+                headers: {
+                    'authorization': `Token ${token}`
+                }
+            }).then(response => {
+                self.login = response.data[0].user.username
+            })
         }
     }
 

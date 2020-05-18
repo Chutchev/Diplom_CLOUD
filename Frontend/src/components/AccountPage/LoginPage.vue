@@ -33,7 +33,7 @@
                     style="width: 90%; margin: auto;"
             ></v-text-field>
             <v-card-text>Не зарегистрированы?
-                <v-btn text color="primary">Зарегистрируйтесь!</v-btn>
+                <v-btn text color="primary" @click="this.rebaseToRegister">Зарегистрируйтесь!</v-btn>
             </v-card-text>
             <v-checkbox
                     v-model="form.remember"
@@ -82,6 +82,9 @@
         methods: {
             validate() {
                 this.$refs.form.validate()
+            },
+            rebaseToRegister(){
+              location.href='/register'
             },
             async loginToCloud(login, password) {
                 const url = 'http://127.0.0.1:8000/api/authtoken/';
