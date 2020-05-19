@@ -1,10 +1,21 @@
 <template>
-    <div id="loader" v-if="this.loading"><img src="../../assets/images/loader.gif"/></div>
-    <div class="files" v-else-if="files.length() > 0">
-            <FileInfo  v-for="file in files" :key="file.id" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
+    <div id="loader" v-if="this.loading">
+        <v-sheet
+                :color="`grey`"
+                class="px-3 pt-3 pb-3"
+        >
+            <v-skeleton-loader
+                    class="mx-auto"
+                    max-width="300"
+                    type="card"
+            ></v-skeleton-loader>
+        </v-sheet>
+    </div>
+    <div class="files" v-else-if="files.length > 0">
+        <FileInfo v-for="file in files" :key="file.id" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
     </div>
     <div v-else>
-        <v-label></v-label>
+
     </div>
 </template>
 
