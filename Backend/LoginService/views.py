@@ -1,10 +1,5 @@
-from django.shortcuts import render
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView
-from rest_framework.authtoken.views import obtain_auth_token, ObtainAuthToken
 from .serialize import *
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
