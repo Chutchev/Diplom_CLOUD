@@ -9,8 +9,9 @@
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
             <v-toolbar-title>CerBeR Cloud
-            <v-icon>mdi-cloud</v-icon>
+                <v-icon>mdi-cloud</v-icon>
             </v-toolbar-title>
+            <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-toolbar-title>{{login}}
             </v-toolbar-title>
@@ -54,20 +55,21 @@
 
 <script>
     import axios from 'axios'
+
     export default {
         name: "MainInfoBar",
         data: () => ({
             drawer: false,
-            login: 'Your Nickname'
+            login: 'Your Nickname',
         }),
         methods: {
-            LogOut(){
-                window.location.href='/login';
+            LogOut() {
+                window.location.href = '/login';
                 localStorage.removeItem('TOKEN');
                 sessionStorage.removeItem('TOKEN');
             }
         },
-        async mounted(){
+        async mounted() {
             let self = this;
             const url = 'http://127.0.0.1:8000/api/user/';
             let token = sessionStorage.getItem('TOKEN');
@@ -77,6 +79,8 @@
                 }
             }).then(response => {
                 self.login = response.data[0].user.username
+            }).catch(()=>{
+                window.location.href='/login'
             })
         }
     }
