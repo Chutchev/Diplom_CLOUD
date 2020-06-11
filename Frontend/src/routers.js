@@ -32,11 +32,6 @@ export default new Router({
             component: () => import("@/components/AccountPage/LoginPage")
         },
         {
-            path: '/me',
-            beforeEnter: ifAuthenticated,
-            component: () => import("@/components/AccountPage/MePage")
-        },
-        {
             path: '/upload',
             beforeEnter: ifAuthenticated,
             component: () => import("@/components/UploadPage/UploadPage")

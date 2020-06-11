@@ -88,7 +88,6 @@
             },
             async loginToCloud(login, password) {
                 const url = 'http://127.0.0.1:8000/api/authtoken/';
-                console.log(login)
                 let credentials = {
                     username: login,
                     password: password
@@ -112,15 +111,13 @@
                     })
                     .catch(error => console.log('ОШИБКА!!!!: ' + error));
             },
-            async onSubmit(evt) {
-                evt.preventDefault();
+            async onSubmit() {
                 let login = this.form.name;
                 let pwd = this.form.pwd;
                 await this.loginToCloud(login, pwd);
             }
         },
         mounted() {
-            console.log(this.form.remember)
         }
     }
 </script>

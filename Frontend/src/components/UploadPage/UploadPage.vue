@@ -20,7 +20,7 @@
                 </v-list-item-icon>
             </v-list-item>
         </v-content>
-        <v-btn x-large color="blue-grey" dark @click="uploadFile">
+        <v-btn v-show="files.length > 0" x-large color="blue-grey" dark @click="uploadFile">
             Загрузить
             <v-icon x-large right>
                 mdi-file-upload

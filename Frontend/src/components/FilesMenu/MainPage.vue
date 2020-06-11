@@ -15,7 +15,6 @@
         <FileInfo v-for="file in files" :key="file.id" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
     </div>
     <div v-else>
-
     </div>
 </template>
 
