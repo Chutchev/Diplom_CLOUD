@@ -29,12 +29,7 @@ export default new Router({
         },
         {
             path: '/login',
-            component: () => import("@/components/RegisterPage/LoginPage")
-        },
-        {
-            path: '/me',
-            beforeEnter: ifAuthenticated,
-            component: () => import("@/components/AccountPage/MePage")
+            component: () => import("@/components/AccountPage/LoginPage")
         },
         {
             path: '/upload',

@@ -1,7 +1,20 @@
 <template>
-    <div id="loader" v-if="this.loading"><img src="../../assets/images/loader.gif"/></div>
-    <div class="files" v-else>
-            <FileInfo v-for="file in files" :key="file.id" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
+    <div id="loader" v-if="this.loading">
+        <v-sheet
+                :color="`grey`"
+                class="px-3 pt-3 pb-3"
+        >
+            <v-skeleton-loader
+                    class="mx-auto"
+                    max-width="300"
+                    type="card"
+            ></v-skeleton-loader>
+        </v-sheet>
+    </div>
+    <div class="files" v-else-if="files.length > 0">
+        <FileInfo v-for="file in files" :key="file.id" v-bind:file="file" :id="file.id" @activeFile="chooseFile"/>
+    </div>
+    <div v-else>
     </div>
 </template>
 
@@ -37,7 +50,7 @@
             },
             async getFiles() {
                 let url = 'http://127.0.0.1:8000/api/files/';
-                let token = localStorage.getItem('TOKEN');
+                let token = sessionStorage.getItem('TOKEN');
                 await axios.get(url, {
                     headers: {
                         'authorization': `Token ${token}`

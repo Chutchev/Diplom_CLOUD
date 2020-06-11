@@ -9,10 +9,11 @@
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
             <v-toolbar-title>CerBeR Cloud
-            <v-icon>mdi-cloud</v-icon>
+                <v-icon>mdi-cloud</v-icon>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon onclick="">
+            <v-spacer></v-spacer>
+            <v-btn icon @click="this.LogOut">
                 <v-icon large>mdi-exit-to-app</v-icon>
             </v-btn>
         </v-app-bar>
@@ -28,7 +29,6 @@
                     dense
             >
                 <v-list-item-group
-                        v-model="group"
                         active-class="deep-purple--text text--accent-4"
                 >
                     <v-list-item onclick="location.href='/files'">
@@ -52,11 +52,23 @@
 </template>
 
 <script>
+
     export default {
         name: "MainInfoBar",
         data: () => ({
             drawer: false,
+            login: ''
         }),
+        methods: {
+            LogOut() {
+                window.location.href = '/login';
+                localStorage.removeItem('TOKEN');
+                sessionStorage.removeItem('TOKEN');
+            }
+        },
+        async mounted() {
+
+        }
     }
 
 </script>

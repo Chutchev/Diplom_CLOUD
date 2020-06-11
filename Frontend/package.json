@@ -12,7 +12,7 @@
     "less": "^3.11.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
-    "vuetify": "^2.2.11"
+    "vuetify": "^2.2.28"
   },
   "devDependencies": {
     "@mdi/font": "^5.1.45",

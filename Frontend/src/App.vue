@@ -18,7 +18,7 @@
             }
         },
         components: {
-            MainInfoBar
+            MainInfoBar,
         },
         methods: {
             getUrl() {
@@ -44,9 +44,5 @@
         text-align: center;
         color: #2c3e50;
         margin-top: 0px;
-    }
-
-    .menu {
-        display: none;
     }
 </style>

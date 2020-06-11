@@ -1,13 +1,12 @@
 from rest_framework import status
-from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from LoginService.models import Profile
-from StorageService.models import File
 from .serializer import *
 from requests.utils import unquote
 from .helpers import delete_file
+from django.db.models import Q
 
 class FilesView(ListCreateAPIView, DestroyAPIView):
     permission_classes = (IsAuthenticated,)
@@ -38,6 +37,9 @@ class FilesView(ListCreateAPIView, DestroyAPIView):
 
     def get_queryset(self):
         user = Profile.objects.get(user=self.request.user)
+        filename = self.request.data.get('filename')
+        if filename:
+            return File.objects.filter(Q(file__contains=filename), user=user)
         return File.objects.filter(user=user)
 
 

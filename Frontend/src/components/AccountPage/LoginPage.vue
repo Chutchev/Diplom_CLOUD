@@ -33,10 +33,10 @@
                     style="width: 90%; margin: auto;"
             ></v-text-field>
             <v-card-text>Не зарегистрированы?
-                <v-btn text color="primary">Зарегистрируйтесь!</v-btn>
+                <v-btn text color="primary" @click="this.rebaseToRegister">Зарегистрируйтесь!</v-btn>
             </v-card-text>
             <v-checkbox
-                    v-model="checkbox"
+                    v-model="form.remember"
                     label="Запомнить меня?"
                     style="margin-left: 25px;"
             ></v-checkbox>
@@ -62,7 +62,7 @@
                 form: {
                     name: '',
                     pwd: '',
-                    email: ''
+                    remember: false
                 },
                 valid: true,
                 nameRules: [
@@ -83,6 +83,9 @@
             validate() {
                 this.$refs.form.validate()
             },
+            rebaseToRegister(){
+              location.href='/register'
+            },
             async loginToCloud(login, password) {
                 const url = 'http://127.0.0.1:8000/api/authtoken/';
                 let credentials = {
@@ -91,7 +94,8 @@
                 };
                 await axios.post(url, credentials)
                     .then((response) => {
-                        if (this.loginForm.remember){
+                        console.log(response.data);
+                        if (this.form.remember){
                             localStorage.setItem('TOKEN', response.data['token']);
                             sessionStorage.setItem('TOKEN', response.data['token']);
                         }
@@ -107,15 +111,13 @@
                     })
                     .catch(error => console.log('ОШИБКА!!!!: ' + error));
             },
-            async onSubmit(evt) {
-                evt.preventDefault();
-                let login = this.form.login;
+            async onSubmit() {
+                let login = this.form.name;
                 let pwd = this.form.pwd;
                 await this.loginToCloud(login, pwd);
             }
         },
         mounted() {
-            console.log(this.loginForm.remember)
         }
     }
 </script>
